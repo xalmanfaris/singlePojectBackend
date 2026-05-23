@@ -1,0 +1,6 @@
+@YuGo_HostAddress = http://localhost:5042
+
+GET {{YuGo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
