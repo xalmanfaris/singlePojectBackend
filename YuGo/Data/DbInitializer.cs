@@ -236,15 +236,36 @@ namespace YuGo.Data
                         CREATE TABLE Notifications (
                             Id INT PRIMARY KEY IDENTITY(1,1),
                             UserId INT NOT NULL,
-                            TripId INT NOT NULL,
+                            TripId INT NULL,
                             Destination NVARCHAR(255),
                             Message NVARCHAR(MAX),
                             Type NVARCHAR(50),
                             Timestamp DATETIME DEFAULT GETDATE(),
                             IsRead BIT DEFAULT 0,
-                            FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
-                            FOREIGN KEY (TripId) REFERENCES TripPlans(Id) ON DELETE NO ACTION
+                            FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
                         )
+                    END
+                ");
+
+                // Migration: Make TripId nullable on existing Notifications table (for global broadcasts)
+                connection.Execute(@"
+                    -- Drop FK constraint on TripId if it exists (constraint name is auto-generated)
+                    DECLARE @fkName NVARCHAR(255);
+                    SELECT @fkName = fk.name
+                    FROM sys.foreign_keys fk
+                    INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
+                    INNER JOIN sys.columns c ON fkc.parent_column_id = c.column_id AND fkc.parent_object_id = c.object_id
+                    WHERE fk.parent_object_id = OBJECT_ID('Notifications') AND c.name = 'TripId';
+                    IF @fkName IS NOT NULL
+                        EXEC('ALTER TABLE Notifications DROP CONSTRAINT ' + @fkName);
+
+                    -- Alter TripId to be nullable if it isn't already
+                    IF EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID('Notifications') AND name = 'TripId' AND is_nullable = 0
+                    )
+                    BEGIN
+                        ALTER TABLE Notifications ALTER COLUMN TripId INT NULL;
                     END
                 ");
 

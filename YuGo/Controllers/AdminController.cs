@@ -458,6 +458,65 @@ namespace YuGo.Controllers
                 return StatusCode(500, new { Error = "An error occurred while fetching overview stats.", Details = ex.Message });
             }
         }
+
+        [HttpPost("global-broadcast")]
+        public async Task<IActionResult> GlobalBroadcast([FromBody] GlobalBroadcastRequestDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Message))
+                return BadRequest(new { message = "Message cannot be empty." });
+
+            try
+            {
+                using var connection = _dbConnectionFactory.CreateConnection();
+
+                // Fetch all active user IDs
+                var userIds = (await connection.QueryAsync<int>(
+                    "SELECT Id FROM Users WHERE IsActive = 1")).ToList();
+
+                if (userIds.Count == 0)
+                    return Ok(new { message = "No active users found to notify.", sentCount = 0 });
+
+                var now = DateTime.Now;
+                var insertSql = @"
+                    INSERT INTO Notifications (UserId, TripId, Destination, Message, Type, Timestamp, IsRead)
+                    VALUES (@UserId, NULL, 'Global', @Message, @Type, @Timestamp, 0)";
+
+                int sentCount = 0;
+                foreach (var userId in userIds)
+                {
+                    await connection.ExecuteAsync(insertSql, new
+                    {
+                        UserId = userId,
+                        Message = request.Message,
+                        Type = request.Type ?? "SystemAlert",
+                        Timestamp = now
+                    });
+
+                    // Push real-time via SignalR to each user's group
+                    await _hubContext.Clients.Group(userId.ToString()).SendAsync("ReceiveNotification", new
+                    {
+                        id = 0,
+                        tripId = (int?)null,
+                        destination = "Global",
+                        message = request.Message,
+                        type = request.Type ?? "SystemAlert",
+                        timestamp = now
+                    });
+
+                    sentCount++;
+                }
+
+                return Ok(new
+                {
+                    message = $"Global broadcast sent successfully to {sentCount} active users.",
+                    sentCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error sending global broadcast.", details = ex.Message });
+            }
+        }
     }
 
     public class ManualNotifyRequestDto
@@ -470,5 +529,14 @@ namespace YuGo.Controllers
 
         [JsonPropertyName("customMessage")]
         public string? CustomMessage { get; set; }
+    }
+
+    public class GlobalBroadcastRequestDto
+    {
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = string.Empty;
+
+        [JsonPropertyName("type")]
+        public string? Type { get; set; }
     }
 }
