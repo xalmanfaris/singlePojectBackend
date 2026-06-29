@@ -97,20 +97,25 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Initialize Database
-using (var scope = app.Services.CreateScope())
+try
 {
-    var factory = scope.ServiceProvider.GetRequiredService<DbConnectionFactory>();
-    DbInitializer.Initialize(factory.ConnectionString);
+    using (var scope = app.Services.CreateScope())
+    {
+        var factory = scope.ServiceProvider.GetRequiredService<DbConnectionFactory>();
+        DbInitializer.Initialize(factory.ConnectionString);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[CRITICAL] Database initialization failed: {ex.Message}");
+    Console.WriteLine(ex.StackTrace);
 }
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.InjectJavascript("/swagger-custom.js");
-    });
-}
+    c.InjectJavascript("/swagger-custom.js");
+});
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
