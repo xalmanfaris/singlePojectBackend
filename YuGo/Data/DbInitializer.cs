@@ -10,12 +10,22 @@ namespace YuGo.Data
         {
             var builder = new SqlConnectionStringBuilder(connectionString);
             var databaseName = builder.InitialCatalog;
-            
-            
-            builder.InitialCatalog = "master";
-            using (var masterConnection = new SqlConnection(builder.ConnectionString))
+
+            // Skip database creation on Azure SQL as the database is pre-created and CREATE DATABASE is not supported in this manner.
+            if (builder.DataSource != null && !builder.DataSource.Contains("database.windows.net", StringComparison.OrdinalIgnoreCase))
             {
-                masterConnection.Execute($"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{databaseName}') CREATE DATABASE [{databaseName}]");
+                try
+                {
+                    builder.InitialCatalog = "master";
+                    using (var masterConnection = new SqlConnection(builder.ConnectionString))
+                    {
+                        masterConnection.Execute($"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{databaseName}') CREATE DATABASE [{databaseName}]");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Database creation skipped/failed: {ex.Message}");
+                }
             }
 
             
