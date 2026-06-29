@@ -20,48 +20,74 @@ namespace YuGo.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] RegisterRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Email) || !Regex.IsMatch(request.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            try
             {
-                return BadRequest("Invalid email format.");
-            }
+                if (string.IsNullOrWhiteSpace(request.Email) || !Regex.IsMatch(request.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                {
+                    return BadRequest("Invalid email format.");
+                }
 
-            if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 8 || 
-                !Regex.IsMatch(request.Password, @"[a-zA-Z]") || !Regex.IsMatch(request.Password, @"[0-9]"))
+                if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 8 || 
+                    !Regex.IsMatch(request.Password, @"[a-zA-Z]") || !Regex.IsMatch(request.Password, @"[0-9]"))
+                {
+                    return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
+                }
+
+                if (await _authService.UserExistsAsync(request.Email))
+                {
+                    return BadRequest("User already exists with this email.");
+                }
+
+                var response = await _authService.RegisterAsync(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
-                return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
+                return StatusCode(500, new
+                {
+                    error = "Internal server error occurred during registration.",
+                    details = ex.Message,
+                    innerError = ex.InnerException?.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
-
-            if (await _authService.UserExistsAsync(request.Email))
-            {
-                return BadRequest("User already exists with this email.");
-            }
-
-            var response = await _authService.RegisterAsync(request);
-            return Ok(response);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromForm] LoginRequest request)
         {
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-            var userAgent = Request.Headers["User-Agent"].ToString();
-            var response = await _authService.LoginAsync(request, ipAddress, userAgent);
-
-            if (response == null || string.IsNullOrEmpty(response.Token))
+            try
             {
-                return Unauthorized(new { message = response?.Message ?? "Invalid login attempt." });
+                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var userAgent = Request.Headers["User-Agent"].ToString();
+                var response = await _authService.LoginAsync(request, ipAddress, userAgent);
+
+                if (response == null || string.IsNullOrEmpty(response.Token))
+                {
+                    return Unauthorized(new { message = response?.Message ?? "Invalid login attempt." });
+                }
+
+                
+                Response.Cookies.Append("X-Access-Token", response.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddDays(7)
+                });
+
+                return Ok(response);
             }
-
-            
-            Response.Cookies.Append("X-Access-Token", response.Token, new CookieOptions
+            catch (Exception ex)
             {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.Now.AddDays(7)
-            });
-
-            return Ok(response);
+                return StatusCode(500, new
+                {
+                    error = "Internal server error occurred during login.",
+                    details = ex.Message,
+                    innerError = ex.InnerException?.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
         }
 
         [HttpPost("admin-login")]

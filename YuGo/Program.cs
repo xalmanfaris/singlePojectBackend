@@ -89,6 +89,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseDeveloperExceptionPage();
+
 app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
