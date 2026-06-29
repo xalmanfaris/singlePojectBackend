@@ -98,7 +98,7 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Initialize Database
+// Initialize Database (triggers on application startup)
 try
 {
     using (var scope = app.Services.CreateScope())
