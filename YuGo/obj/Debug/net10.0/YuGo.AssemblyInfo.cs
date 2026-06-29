@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YuGo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c1fd365a773b331d150bfa5bdff0a4902fc30cf")]
 [assembly: System.Reflection.AssemblyProductAttribute("YuGo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YuGo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|c:\\users\\xalma\\documents\\single-project\\yugo\\yugo\\services\\geminiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|solutionrelative:yugo\\services\\geminiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|c:\\users\\xalma\\documents\\single-project\\yugo\\yugo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|solutionrelative:yugo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|c:\\users\\xalma\\documents\\single-project\\yugo\\yugo\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{883F164D-9E8A-2DEE-2905-FB62D5242470}|YuGo\\YuGo.csproj|solutionrelative:yugo\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GeminiService.cs",
+              "DocumentMoniker": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\Services\\GeminiService.cs",
+              "RelativeDocumentMoniker": "YuGo\\Services\\GeminiService.cs",
+              "ToolTip": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\Services\\GeminiService.cs",
+              "RelativeToolTip": "YuGo\\Services\\GeminiService.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T04:22:59.629Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\appsettings.json",
+              "RelativeDocumentMoniker": "YuGo\\appsettings.json",
+              "ToolTip": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\appsettings.json",
+              "RelativeToolTip": "YuGo\\appsettings.json",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-25T04:22:41.281Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NotificationHub.cs",
+              "DocumentMoniker": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\Hubs\\NotificationHub.cs",
+              "RelativeDocumentMoniker": "YuGo\\Hubs\\NotificationHub.cs",
+              "ToolTip": "C:\\Users\\xalma\\Documents\\Single-Project\\YuGo\\YuGo\\Hubs\\NotificationHub.cs",
+              "RelativeToolTip": "YuGo\\Hubs\\NotificationHub.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-25T03:49:34.89Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

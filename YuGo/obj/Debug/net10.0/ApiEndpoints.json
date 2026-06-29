@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "YuGo.Controllers.AdminController",
+    "Method": "GlobalBroadcast",
+    "RelativePath": "api/Admin/global-broadcast",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "YuGo.Controllers.GlobalBroadcastRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YuGo.Controllers.AdminController",
     "Method": "GetAllLostItems",
     "RelativePath": "api/Admin/lost-items",
     "HttpMethod": "GET",
