@@ -220,6 +220,8 @@ namespace YuGo.Data
                             PredictedLocation NVARCHAR(MAX),
                             Reason NVARCHAR(MAX),
                             CreatedAt DATETIME DEFAULT GETDATE(),
+                            IsRecovered BIT NOT NULL DEFAULT 0,
+                            RecoveredFrom NVARCHAR(MAX) NULL,
                             FOREIGN KEY (TripId) REFERENCES TripPlans(Id) ON DELETE CASCADE,
                             FOREIGN KEY (UserId) REFERENCES Users(Id)
                         );
@@ -236,6 +238,18 @@ namespace YuGo.Data
                     IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('TripPlans') AND name = 'EndDate')
                     BEGIN
                         ALTER TABLE TripPlans ADD EndDate DATETIME NULL;
+                    END
+                ");
+
+                // Ensure IsRecovered and RecoveredFrom columns exist in LostItems (for migrated/pre-existing databases)
+                connection.Execute(@"
+                    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('LostItems') AND name = 'IsRecovered')
+                    BEGIN
+                        ALTER TABLE LostItems ADD IsRecovered BIT NOT NULL DEFAULT 0;
+                    END
+                    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('LostItems') AND name = 'RecoveredFrom')
+                    BEGIN
+                        ALTER TABLE LostItems ADD RecoveredFrom NVARCHAR(MAX) NULL;
                     END
                 ");
 
